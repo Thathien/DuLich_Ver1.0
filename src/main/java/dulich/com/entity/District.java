@@ -25,12 +25,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Province")
+@Table(name = "District")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Province implements Serializable {
+public class District implements Serializable {
 
 	/**
 	 * 
@@ -38,29 +38,23 @@ public class Province implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "Name", columnDefinition = "nvarchar(250)", nullable = false)
+	@Column(name = "Name", columnDefinition = "nvarchar(250)")
 	private String name;
 
-	@Column(name = "`Type`", columnDefinition = "nvarchar(20)")
+	@Column(name = "`Type`", columnDefinition = "nvarchar(50)")
 	private String type;
 
-	@Column(name = "TelephoneCode")
-	private int telephoneCode;
-
-	@Column(name = "ZipCode", columnDefinition = "nvarchar(20)")
-	private String zipCode;
+	@Column(name = "LatiLongTude", columnDefinition = "nvarchar(50)")
+	private String latiLongTude;
 
 	@JsonManagedReference
 	@ManyToOne
-	@JoinColumn(name = "CountryId", referencedColumnName = "Id")
-	private Country country;
-
-	@Column(name = "CountryCode", columnDefinition = "nvarchar(100)", nullable = false)
-	private String countryCode;
+	@JoinColumn(name = "ProvinceId", referencedColumnName = "Id")
+	private Province province;
 
 	@Column(name = "SortOrder")
 	private int sortOrder;
@@ -72,6 +66,6 @@ public class Province implements Serializable {
 	private boolean isDeleted;
 
 	@JsonBackReference
-	@OneToMany(mappedBy = "province", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<District> districts = new HashSet<District>();
+	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Ward> wards = new HashSet<Ward>();
 }
