@@ -68,4 +68,8 @@ public class District implements Serializable {
 	@JsonBackReference
 	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Ward> wards = new HashSet<Ward>();
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "district", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Homestay> homestays = new HashSet<Homestay>();
 }
