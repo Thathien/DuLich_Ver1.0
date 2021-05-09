@@ -1,8 +1,8 @@
 package dulich.com.entity;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,7 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,33 +19,43 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Utilities")
+@Table(name = "`Sales`")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Utilities {
+public class Sales {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "UtilId")
-	private Long utilId;
+	@Column(name = "SalesID")
+	private Long saleID;
 
-	@Column(name = "UtilNameType", columnDefinition = "nvarchar(40)")
-	private String utilNameType;
-	
-	@Column(name = "UtilName", columnDefinition = "nvarchar(40)")
-	private String utilName;
+	@Column(name = "SalesTitle")
+	private String salesTitle;
 
-	@Column(name = "Icon", columnDefinition = "nvarchar(40)")
-	private String icon;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "DateStart", columnDefinition = "datetime")
+	private Date dateStart;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "DateEnd", columnDefinition = "datetime")
+	private Date dateEnd;
+
+	@Column(name = "Discounts")
+	private int discounts;
+
+	@OneToMany(mappedBy = "sales", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonBackReference
+	private Set<SalesInfor> salesInfor = new HashSet<SalesInfor>();
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
@@ -56,9 +66,4 @@ public class Utilities {
 	@UpdateTimestamp
 	@Column(name = "UpdateDate")
 	private Date updateDate;
-
-	@ManyToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@EqualsAndHashCode.Exclude
-	private Collection<Homestay> homestays = new HashSet<Homestay>();
-
 }

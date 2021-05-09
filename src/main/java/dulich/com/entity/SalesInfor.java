@@ -1,52 +1,54 @@
 package dulich.com.entity;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
+import javax.persistence.GenerationType;
 
-import javax.persistence.CascadeType;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Utilities")
+@Table(name = "SalesInfor")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Utilities {
+public class SalesInfor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "UtilId")
-	private Long utilId;
+	@Column(name = "SalesInforId")
+	private Long salesInforId;
 
-	@Column(name = "UtilNameType", columnDefinition = "nvarchar(40)")
-	private String utilNameType;
-	
-	@Column(name = "UtilName", columnDefinition = "nvarchar(40)")
-	private String utilName;
+	@Min(value = 1)
+	@Column(name = "MaxNumberSales")
+	private int maxNumberSales;
 
-	@Column(name = "Icon", columnDefinition = "nvarchar(40)")
-	private String icon;
+	@JsonManagedReference
+	@ManyToOne
+	@JoinColumn(name = "SalesID", referencedColumnName = "SalesID")
+	private Sales sales;
 
+	@JsonBackReference
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
 	@Column(name = "CreateDate")
@@ -56,9 +58,4 @@ public class Utilities {
 	@UpdateTimestamp
 	@Column(name = "UpdateDate")
 	private Date updateDate;
-
-	@ManyToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@EqualsAndHashCode.Exclude
-	private Collection<Homestay> homestays = new HashSet<Homestay>();
-
 }
