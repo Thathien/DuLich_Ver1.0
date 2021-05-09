@@ -3,11 +3,13 @@ package dulich.com.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
@@ -17,6 +19,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "Homestay")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Homestay {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +45,7 @@ public class Homestay {
 	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "LocationID", referencedColumnName = "Id")
-	private District district;
+	private District districtLocaion;
 
 	@JsonManagedReference
 	@ManyToOne
@@ -42,7 +55,7 @@ public class Homestay {
 	@Min(value = 10)
 	@Column(name = "TotalArea")
 	private int totalArea;
-	
+
 	@Min(value = 1)
 	@Column(name = "MinNumberPeople")
 	private int minNumberPeople;
