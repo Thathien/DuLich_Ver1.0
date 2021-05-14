@@ -1,5 +1,7 @@
 package dulich.com.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +24,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Ward {
+public class Ward implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "Id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,6 +2,7 @@ package dulich.com.entity;
 
 import javax.persistence.GenerationType;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -32,7 +33,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SalesInfor {
+public class SalesInfor implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package dulich.com.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +33,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Sales {
+public class Sales implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

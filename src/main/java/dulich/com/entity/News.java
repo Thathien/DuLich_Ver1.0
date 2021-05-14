@@ -25,28 +25,44 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "HomestayImages")
+@Table(name = "News")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class HomestayImages implements Serializable {
-
+public class News implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Column(name = "NewsID")
 	@Id
-	@Column(name = "Id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@Column(name = "Src", columnDefinition = "nvarchar(max)")
-	private String src;
+	private Long newsID;
+	
+	@Column(name = "NewsName", columnDefinition = "nvarchar(80)",nullable = false)
+	private String newsName;
+	
+	@Column(name = "Hagtag", columnDefinition = "varchar(60)")
+	public String hagtag;
+	
+	@Column(name = "BodyContent", columnDefinition = "nvarchar(max)")
+	private String bodyContent;
+	
+	@JsonManagedReference
+	@ManyToOne
+	@JoinColumn(name = "AuthorID", referencedColumnName = "AccId")
+	private Account account;
 
 	@Column(name = "IsHide", columnDefinition = "bit")
 	private boolean isHide;
+
+	@Column(name = "IsAprove", columnDefinition = "bit")
+	private boolean isAprove;
+
+	@Column(name = "IsPriority", columnDefinition = "bit")
+	private boolean isPriority;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
@@ -57,9 +73,9 @@ public class HomestayImages implements Serializable {
 	@UpdateTimestamp
 	@Column(name = "UpdateDate")
 	private Date updateDate;
-
+	
 	@JsonManagedReference
 	@ManyToOne
-	@JoinColumn(name = "HomeStayID", referencedColumnName = "HomeStayID")
-	private Homestay homestay;
+	@JoinColumn(name = "NewsTypeID", referencedColumnName = "NewsTypeID")
+	private NewsType newsType;
 }

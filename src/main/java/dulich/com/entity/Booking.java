@@ -1,5 +1,6 @@
 package dulich.com.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
@@ -14,11 +17,16 @@ import javax.validation.constraints.Min;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 
-public class Booking {
+public class Booking implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,7 +77,7 @@ public class Booking {
 	@Column(name = "PaymentStatus", columnDefinition = "nvarchar(40)")
 	public String paymentStatus;
 
-	@JsonBackReference
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
 	@Column(name = "CreateDate")
@@ -79,4 +87,9 @@ public class Booking {
 	@UpdateTimestamp
 	@Column(name = "UpdateDate")
 	private Date updateDate;
+	
+	@JsonManagedReference
+	@ManyToOne
+	@JoinColumn(name = "HomeStayID", referencedColumnName = "HomeStayID")
+	private Homestay homestay;
 }

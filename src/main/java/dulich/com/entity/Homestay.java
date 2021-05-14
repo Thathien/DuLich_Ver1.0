@@ -1,5 +1,6 @@
 package dulich.com.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -40,7 +41,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Homestay {
+public class Homestay implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "HomeStayID")
@@ -129,7 +135,7 @@ public class Homestay {
 	@Column(name = "IsPriority", columnDefinition = "bit")
 	private boolean isPriority;
 
-	@JsonBackReference
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
 	@Column(name = "CreateDate")
@@ -150,4 +156,7 @@ public class Homestay {
 	@JoinTable(name = "HomestayUtills", joinColumns = @JoinColumn(name = "HomeStayID"), inverseJoinColumns = @JoinColumn(name = "UtilId"))
 	private Collection<Utilities> utilities = new HashSet<Utilities>();
 
+	@OneToMany(mappedBy = "homestay", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Booking> bookings= new HashSet<>();
+	
 }

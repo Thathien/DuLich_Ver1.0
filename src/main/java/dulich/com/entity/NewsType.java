@@ -1,9 +1,9 @@
 package dulich.com.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,20 +20,20 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Utilities")
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "NewsType")
 @Getter
 @Setter
-public class Utilities implements Serializable{
-
+@AllArgsConstructor
+@NoArgsConstructor
+public class NewsType implements Serializable{
 	/**
 	 * 
 	 */
@@ -41,17 +41,17 @@ public class Utilities implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "UtilId")
-	private Long utilId;
+	@Column(name = "NewsTypeID")
+	private Long newsTypeId;
 
-	@Column(name = "UtilNameType", columnDefinition = "nvarchar(40)")
-	private String utilNameType;
-	
-	@Column(name = "UtilName", columnDefinition = "nvarchar(40)")
-	private String utilName;
+	@Column(name = "Hagtag", columnDefinition = "varchar(60)")
+	public String hagtag;
 
-	@Column(name = "Icon", columnDefinition = "nvarchar(40)")
-	private String icon;
+	@Column(name = "NewsTypeName", columnDefinition = "nvarchar(40)", nullable = false)
+	private String newsTypeName;
+
+	@Column(name = "IsHide", columnDefinition = "bit")
+	private boolean isHide;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
@@ -63,8 +63,7 @@ public class Utilities implements Serializable{
 	@Column(name = "UpdateDate")
 	private Date updateDate;
 
-	@ManyToMany(mappedBy = "utilities", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@EqualsAndHashCode.Exclude
-	private Collection<Homestay> homestays = new HashSet<Homestay>();
-
+	@JsonBackReference
+	@OneToMany(mappedBy = "newsType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<News> news = new HashSet<>();
 }
