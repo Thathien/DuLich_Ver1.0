@@ -1,6 +1,7 @@
 package dulich.com.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,4 +41,14 @@ public class Role implements Serializable {
 
 	@Column(name = "RoleName", columnDefinition = "nvarchar(50)")
 	private String roleName;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	@Column(name = "CreateDate")
+	private Date createDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	@Column(name = "UpdateDate")
+	private Date updateDate;
 }
