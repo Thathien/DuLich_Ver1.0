@@ -15,6 +15,7 @@ public class HomeController {
 		if(LOGGER.isInfoEnabled()) {
 			LOGGER.info("HomeController get index");
 		}
+		
 		LOGGER.debug("HomeController get index");
 		return "user/index";
 	}
