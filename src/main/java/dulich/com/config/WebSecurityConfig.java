@@ -50,10 +50,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
 		// If no login, it will redirect to /login page.
-		http.authorizeRequests().antMatchers("/user").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN','ROLE_MEMBER')");
+		http.authorizeRequests().antMatchers("/user/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN','ROLE_MEMBER')");
 
 		// For ADMIN only.
-		http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
+		http.authorizeRequests().antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')");
+
+		// Author for admin and menber
+		http.authorizeRequests().antMatchers("/new").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
+				.antMatchers("/edit/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER").antMatchers("/delete/**")
+				.hasAuthority("ROLE_ADMIN").anyRequest().authenticated();
 
 		// Config for Login Form
 		http.authorizeRequests().and().formLogin()//
@@ -65,12 +70,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.usernameParameter("username")//
 				.passwordParameter("password")
 				// Config for Logout Page
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
+				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
+				.and().exceptionHandling().accessDeniedPage("handle/403");
 
 		// Config Remember Me.
 		http.authorizeRequests().and() //
 				.rememberMe().tokenRepository(this.persistentTokenRepository()) //
 				.tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
+		http.
 	}
 
 	@Bean
