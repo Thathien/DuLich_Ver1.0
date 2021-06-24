@@ -1,5 +1,7 @@
 package dulich.com.config;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import dulich.com.services.UserService;
 
@@ -46,11 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 
 		// The pages does not require login
-		http.authorizeRequests().antMatchers("/", "/login", "logout","/userfront/**").permitAll();
+		http.authorizeRequests().antMatchers("/", "/login", "logout", "/userfront/**", "/index").permitAll();
 
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
 		// If no login, it will redirect to /login page.
-		http.authorizeRequests().antMatchers("/user/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN','ROLE_MEMBER')");
+		http.authorizeRequests().antMatchers("/user/**", "/index")
+				.access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN','ROLE_MEMBER')");
 
 		// For ADMIN only.
 		http.authorizeRequests().antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')");
@@ -70,14 +74,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.usernameParameter("username")//
 				.passwordParameter("password")
 				// Config for Logout Page
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
-				.and().exceptionHandling().accessDeniedPage("/403");
+				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/").and().exceptionHandling()
+				.accessDeniedPage("/403");
 
 		// Config Remember Me.
 		http.authorizeRequests().and() //
 				.rememberMe().tokenRepository(this.persistentTokenRepository()) //
 				.tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
-		
+
 	}
 
 	@Bean
@@ -85,5 +89,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
 		db.setDataSource(dataSource);
 		return db;
+	}
+
+	@Bean(name = "simpleMappingExceptionResolver")
+	public SimpleMappingExceptionResolver createSimpleMappingExceptionResolver() {
+		SimpleMappingExceptionResolver r = new SimpleMappingExceptionResolver();
+
+		Properties mappings = new Properties();
+		mappings.setProperty("DatabaseException", "databaseError");
+		mappings.setProperty("InvalidCreditCardException", "creditCardError");
+
+		r.setExceptionMappings(mappings); // None by default
+		r.setDefaultErrorView("error"); // No default
+		r.setExceptionAttribute("ex"); // Default is "exception"
+		r.setWarnLogCategory("example.MvcLogger"); // No default
+		return r;
 	}
 }
